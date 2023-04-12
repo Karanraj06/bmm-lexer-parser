@@ -1,0 +1,15 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Specify a merge driver for yacc and lex files
+# This will help Git resolve conflicts when multiple developers modify the same files
+*.l merge=union
+*.y merge=union
+
+# Mark the README file as a documentation file
+# This will ensure that the README file is displayed more prominently in GitHub
+*.md documentation
+
+# Mark the Makefile as executable
+# This will allow the Makefile to be run directly from the command line
+Makefile text eol=lf chmod=+x

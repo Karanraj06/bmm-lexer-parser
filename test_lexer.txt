@@ -1,36 +1,20 @@
-Statement Type: REM
-Comment: ***HELLO WORLD***
+Line Number: 10Statement Type: REM
+Comment: SAMPLE PROGRAM WITH SUBROUTINES
 
-Statement Type: LET
-Variable ID: A
-Operator: Equal '='
-Numeric Literal: 10
+Line Number: 20Statement Type: REM
+Comment: REM
 
-Statement Type: LET
-Variable ID: A
-Operator: Equal '='
-Variable ID: B
-Operator: Plus '+'
-Variable ID: C
+Line Number: 30Statement Type: REM
+Comment: A IS ARRAY TO HOLD THE DATA ITEMS
 
-Statement Type: LET
-Variable ID: X
-Operator: Plus '+'
-Variable ID: Y
-Operator: Equal '='
-Variable ID: Z
+Line Number: 40Statement Type: REM
+Comment: I IS THE LOOP INDEX VARIABLE
 
-Statement Type: LET
-Variable ID: D
-Operator: Equal '='
-Variable ID: P
-Operator: Multiplication '*'
-Variable ID: Q
+Line Number: 50Statement Type: REM
+Comment: X HOLDS THE VALUE WE SEEK
 
-Statement Type: LET
-Variable ID: K
-Operator: Minus '-'
-Variable ID: A
-Operator: Equal '='
-Variable ID: H
-
+Line Number: 60Statement Type: REM
+Comment: F IS A FLAG
+Line number 6: Lexical error, there is an undefined token in input: ,
+Line number 6: Lexical error, there is an undefined token in input: 0
+Variable ID: M

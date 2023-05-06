@@ -13,12 +13,14 @@ YACC_H_FILE = BMM_Parser.tab.h
 .PHONY: all clean lexer
 
 all: $(OUTPUT_FILE)
+	@./$(OUTPUT_FILE) $(INPUT_FILE)
 
 $(OUTPUT_FILE): $(LEX_C_FILE) $(YACC_C_FILE)
 	@$(CC) $(CFLAGS) $^ -o $@
 
 lexer: $(LEX_C_FILE)
 	@$(CC) $(CFLAGS) $^ -o $(OUTPUT_FILE)
+	@./$(OUTPUT_FILE) $(INPUT_FILE)
 
 $(LEX_C_FILE): $(LEX_FILE)
 	@$(FLEX) -o $@ $^

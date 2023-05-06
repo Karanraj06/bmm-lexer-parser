@@ -4,13 +4,13 @@
 int yylex(void);
 int yyparse(void);
 void yyerror(char *s);
-FILE *yyin, *lexer;
+FILE *yyin, *lexer, *parser;
 %}
 
 %token NUM STR
-%token EXPR BOOLEXPR
+%token FUNCNAME
 %token LINENUM COMMENT LET PRINT IF THEN FOR TO STEP NEXT VAR DATA INPUT DIM DEF GOTO GOSUB RETURN END STOP
-%left PLUS MINUS MULT DIV EXPONENT LPAREN RPAREN EQUAL NOT_EQUAL LESS LESS_EQUAL GREATER GREATER_EQUAL NOT AND OR XOR
+%left PLUS MINUS MULTIPLY DIVIDE EXPONENT LPAREN RPAREN EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL NOT AND OR XOR
 
 %%
 PROGRAM : LINE PROGRAM
@@ -26,26 +26,62 @@ STATEMENT : LET VAR EQUAL EXPR
           | NEXT VAR
           | DATASTATEMENT
           | INPUTSTATEMENT
-          | DIM
-          | DEF
-          | GOTO
-          | GOSUB
+          | DIM DECLARATIONS
+          | DEF FUNCNAME '(' VAR ')' EQUAL EXPR
+          | DEF FUNCNAME EQUAL EXPR
+          | GOTO NUM
+          | GOSUB NUM
           | RETURN  
           | END
           | STOP
           ;
-DATASTATEMENT : DATA EXPR
-              | DATASTATEMENT ',' EXPR
-              ;
+EXPR            : EXPR AROPERATOR EXPR
+                | LPAREN EXPR RPAREN
+                | BOOLEXPR
+                | VAR
+                | STR
+                | NUM
+                ;
+AROPERATOR      : PLUS
+                | MINUS
+                | MULTIPLY
+                | DIVIDE
+                | EXPONENT
+                ;
+BOOLEXPR        : BOOLEXPR BOOLOPERATOR BOOLEXPR
+                | LPAREN BOOLEXPR RPAREN
+                | NOT BOOLEXPR
+                | VAR
+                | NUM
+                ;
+BOOLOPERATOR    : EQUAL
+                | NOTEQUAL
+                | LESS
+                | LESSEQUAL
+                | GREATER
+                | GREATEREQUAL
+                | AND
+                | OR
+                | XOR
+                ;
+DATASTATEMENT   : DATA EXPR
+                | DATASTATEMENT ',' EXPR
+                ;
 INPUTSTATEMENT : INPUT VAR
                | INPUTSTATEMENT ',' VAR
+               ;
+DECLARATIONS   : DECLARATION
+               | DECLARATIONS ',' DECLARATION
+               ;
+DECLARATION    : VAR '(' NUM ')'
+               | VAR '(' NUM ',' NUM ')' 
                ;
 %%
 
 int main(int argc, char *argv[]) {
         yyin = fopen(argv[1], "r");
         lexer = fopen("test_lexer.txt", "w");
-        parser = fopen("Parser.txt", "w");   
+        parser = fopen("test_parser.txt", "w");   
         yyparse();      
         fclose(yyin);
         fclose(lexer);

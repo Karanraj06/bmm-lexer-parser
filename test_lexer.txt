@@ -1,20 +1,2 @@
-Line Number: 10Statement Type: REM
-Comment: SAMPLE PROGRAM WITH SUBROUTINES
-
-Line Number: 20Statement Type: REM
-Comment: REM
-
-Line Number: 30Statement Type: REM
-Comment: A IS ARRAY TO HOLD THE DATA ITEMS
-
-Line Number: 40Statement Type: REM
-Comment: I IS THE LOOP INDEX VARIABLE
-
-Line Number: 50Statement Type: REM
-Comment: X HOLDS THE VALUE WE SEEK
-
-Line Number: 60Statement Type: REM
-Comment: F IS A FLAG
-Line number 6: Lexical error, there is an undefined token in input: ,
-Line number 6: Lexical error, there is an undefined token in input: 0
-Variable ID: M
+Line Number: 100
+Statement Type: PRINT

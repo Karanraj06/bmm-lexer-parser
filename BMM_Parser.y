@@ -1,15 +1,15 @@
-%%{
+%{
 #include <stdio.h>
 #include <string.h>
 
 int yylex(void);
 void yyerror(char* s);
 
-FILE* lexer;
+FILE* lexer, *yyin;
 FILE* parser;
 %}
 
-%token NUM STR
+%token NUM STR COMMA
 %token FUNCNAME
 %token LINENUM COMMENT LET PRINT IF THEN FOR TO STEP NEXT VAR DATA INPUT DIM DEF GOTO GOSUB RETURN END STOP
 %left PLUS MINUS MULTIPLY DIVIDE EXPONENT LPAREN RPAREN EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL NOT AND OR XOR
@@ -30,7 +30,7 @@ STATEMENT : LET VAR EQUAL EXPR { fprintf(parser, "Statement: LET %s = %s\n", $2,
           | VAR { fprintf(parser, "Statement: VAR %s\n", $1); }
           | DATA { fprintf(parser, "Statement: DATA\n"); }
           | INPUT { fprintf(parser, "Statement: INPUT\n"); }
-          | DIM { fprintf(parser, "Statement: DIM\n"); }
+          | DIM DECLARATIONS { fprintf(parser, "Statement: DIM Declaration: %s(%s)\n", $1, $2);}
           | DEF FUNCNAME '(' VAR ')' EQUAL EXPR { fprintf(parser, "Statement: DEF %s(%s) = %s\n", $2, $4, $7); }
           | DEF FUNCNAME EQUAL EXPR { fprintf(parser, "Statement: DEF %s = %s\n", $2, $4); }
           | GOTO { fprintf(parser, "Statement: GOTO\n"); }
@@ -40,7 +40,6 @@ STATEMENT : LET VAR EQUAL EXPR { fprintf(parser, "Statement: LET %s = %s\n", $2,
           | NEXT VAR { fprintf(parser, "Statement: NEXT %s\n", $2); }
           | DATASTATEMENT { fprintf(parser, "Statement: DATA %s\n", $1); }
           | INPUTSTATEMENT { fprintf(parser, "Statement: INPUT %s\n", $1); }
-          | DIM DECLARATIONS { fprintf(parser, "Statement: DIM %s\n", $1); }
           | GOTO NUM { fprintf(parser, "Statement: GOTO %s\n", $2); }
           | GOSUB NUM { fprintf(parser, "Statement: GOSUB %s\n", $2); }
           | RETURN { fprintf(parser, "Statement: RETURN\n"); }
@@ -130,7 +129,7 @@ BOOLOPERATOR    : EQUAL { fprintf(parser, "Boolean Operator: ==\n"); }
 DATASTATEMENT   : DATA EXPR {
                       fprintf(parser, "Data Statement: DATA %s\n", $2);
                   }
-                | DATASTATEMENT ',' EXPR {
+                | DATASTATEMENT COMMA EXPR {
                       fprintf(parser, "Data Statement: %s, %s\n", $1, $3);
                   }
                 ;
@@ -138,7 +137,7 @@ DATASTATEMENT   : DATA EXPR {
 INPUTSTATEMENT : INPUT VAR {
                      fprintf(parser, "Input Statement: INPUT %s\n", $2);
                  }
-               | INPUTSTATEMENT ',' VAR {
+               | INPUTSTATEMENT COMMA VAR {
                      fprintf(parser, "Input Statement: %s, %s\n", $1, $3);
                  }
                ;
@@ -146,15 +145,15 @@ INPUTSTATEMENT : INPUT VAR {
 DECLARATIONS   : DECLARATION {
                      fprintf(parser, "Declaration: %s\n", $1);
                  }
-               | DECLARATIONS ',' DECLARATION {
+               | DECLARATION COMMA DECLARATIONS {
                      fprintf(parser, "Declaration: %s, %s\n", $1, $3);
                  }
                ;
 
-DECLARATION    : VAR '(' NUM ')' {
+DECLARATION    : VAR LPAREN NUM RPAREN {
                      fprintf(parser, "Declaration: %s(%s)\n", $1, $3);
                  }
-               | VAR '(' NUM ',' NUM ')' {
+               | VAR LPAREN NUM COMMA NUM RPAREN {
                      fprintf(parser, "Declaration: %s(%s, %s)\n", $1, $3, $5);
                  }
                ;

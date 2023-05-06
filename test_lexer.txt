@@ -1,0 +1,36 @@
+Statement Type: REM
+Comment: ***HELLO WORLD***
+
+Statement Type: LET
+Variable ID: A
+Operator: Equal '='
+Numeric Literal: 10
+
+Statement Type: LET
+Variable ID: A
+Operator: Equal '='
+Variable ID: B
+Operator: Plus '+'
+Variable ID: C
+
+Statement Type: LET
+Variable ID: X
+Operator: Plus '+'
+Variable ID: Y
+Operator: Equal '='
+Variable ID: Z
+
+Statement Type: LET
+Variable ID: D
+Operator: Equal '='
+Variable ID: P
+Operator: Multiplication '*'
+Variable ID: Q
+
+Statement Type: LET
+Variable ID: K
+Operator: Minus '-'
+Variable ID: A
+Operator: Equal '='
+Variable ID: H
+

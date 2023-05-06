@@ -5,33 +5,32 @@ int yylex(void);
 int yyparse(void);
 void yyerror(char *s);
 %}
-
-%token LineNum Comment Let Print If Then Else For Step Next Var Data Input Dim Def Goto Gosub Return End Stop
-%left plus minus mult div exponent lparen rparen equal not_equal less less_equal greater greater_equal not and or xor
+%token LINENUM COMMENT LET PRINT IF THEN ELSE FOR STEP NEXT VAR DATA INPUT DIM DEF GOTO GOSUB RETURN END STOP EXPR BOOLEXPR
+%left PLUS MINUS MULT DIV EXPONENT LPAREN RPAREN EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL NOT AND OR XOR
 
 %%
-Program : Line Program
-        | Line
+PROGRAM : LINE PROGRAM
+        | LINE
         ;
-Line    : LineNum Statement
-        | LineNum Comment
+LINE    : LINENUM STATEMENT
+        | LINENUM COMMENT
         ;
-Statement : Let Var equal Expr
-          | Print Expr
-          | If boolExpr Then 
-          | Else
-          | For
-          | Step
-          | Next
-          | Var
-          | Data
-          | Input
-          | Dim
-          | Def
-          | Goto
-          | Gosub
-          | Return  
-          | End
-          | Stop
+STATEMENT : LET VAR EQUAL EXPR
+          | PRINT EXPR
+          | IF BOOLEXPR THEN 
+          | ELSE
+          | FOR
+          | STEP
+          | NEXT
+          | VAR
+          | DATA
+          | INPUT
+          | DIM
+          | DEF
+          | GOTO
+          | GOSUB
+          | RETURN  
+          | END
+          | STOP
           ;
 %%

@@ -1,12 +1,30 @@
-a.out: BMM_Scanner.yy.c BMM_Parser.tab.c
-	@gcc -ll BMM_Scanner.yy.c BMM_Parser.tab.c
+BISON = bison
+BMM_DSYM_FOLDER = bmm.dSYM
+CC = gcc
+CFLAGS = -g -ll
+FLEX = flex
+LEX_C_FILE = BMM_Scanner.yy.c
+LEX_FILE = BMM_Scanner.l
+OUTPUT_FILE = bmm
+YACC_C_FILE = BMM_Parser.tab.c
+YACC_FILE = BMM_Parser.y
+YACC_H_FILE = BMM_Parser.tab.h
 
-BMM_Scanner.yy.c: BMM_Scanner.l
-	@flex -o BMM_Scanner.yy.c BMM_Scanner.l
+.PHONY: all clean lexer
 
-BMM_Parser.tab.c: BMM_Parser.y
-	@bison -d BMM_Parser.y
+all: $(OUTPUT_FILE)
 
-.PHONY: clean
+$(OUTPUT_FILE): $(LEX_C_FILE) $(YACC_C_FILE)
+	@$(CC) $(CFLAGS) $^ -o $@
+
+lexer: $(LEX_C_FILE)
+	@$(CC) $(CFLAGS) $^ -o $(OUTPUT_FILE)
+
+$(LEX_C_FILE): $(LEX_FILE)
+	@$(FLEX) -o $@ $^
+
+$(YACC_C_FILE) $(YACC_H_FILE): $(YACC_FILE)
+	@$(BISON) -d $^
+
 clean:
-	@rm *.out *.tab.c *.tab.h *.yy.c
+	@rm -rf $(BMM_DSYM_FOLDER) $(LEX_C_FILE) $(OUTPUT_FILE) $(YACC_C_FILE) $(YACC_H_FILE)

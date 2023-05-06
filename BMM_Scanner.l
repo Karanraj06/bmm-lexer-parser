@@ -27,7 +27,6 @@ DEF                {fprintf(lexer, "Statement Type: DEF\n");}
 DATA               {fprintf(lexer, "Statement Type: DATA\n");}
 GOTO               {fprintf(lexer, "Statement Type: GOTO\n");}
 GOSUB              {fprintf(lexer, "Statement Type: GOSUB\n");}
-RETURN             {fprintf(lexer, "Statement Type: RETURN\n");}
 END                {fprintf(lexer, "Statement Type: END\n");}
 STOP               {fprintf(lexer, "Statement Type: STOP\n");}
 

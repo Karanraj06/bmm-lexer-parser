@@ -6,18 +6,32 @@ int yyparse(void);
 void yyerror(char *s);
 %}
 
-%union {
-    int num;
-    char *str;
-}
-
-%token <num> lineNum
-%token <str> comment let print If then var data end stop
+%token LineNum Comment Let Print If Then Else For Step Next Var Data Input Dim Def Goto Gosub Return End Stop
+%left plus minus mult div exponent lparen rparen equal not_equal less less_equal greater greater_equal not and or xor
 
 %%
-// program : lineNum comment
-//         | lineNum statement {}
-//         ;
-
-program : ""
+Program : Line Program
+        | Line
+        ;
+Line    : LineNum Statement
+        | LineNum Comment
+        ;
+Statement : Let Var equal Expr
+          | Print Expr
+          | If boolExpr Then 
+          | Else
+          | For
+          | Step
+          | Next
+          | Var
+          | Data
+          | Input
+          | Dim
+          | Def
+          | Goto
+          | Gosub
+          | Return  
+          | End
+          | Stop
+          ;
 %%

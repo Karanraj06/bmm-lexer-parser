@@ -10,7 +10,7 @@ FILE* lexer;
 %%
 ^[1-9][0-9]*0      {fprintf(lexer, "Line Number: %s", yytext);} // Line Number
 
-REM[ ][*|A-Z]*     {fprintf(lexer, "Statement Type: REM\nComment: %s\n", yytext);}      // Statement Types
+REM([ ][.]*)?     {fprintf(lexer, "Statement Type: REM\nComment: %s\n", yytext);}      // Statement Types
 LET                {fprintf(lexer, "Statement Type: LET\n");}
 PRINT              {fprintf(lexer, "Statement Type: PRINT\n");}
 IF                 {fprintf(lexer, "Statement Type: IF\n");}

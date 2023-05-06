@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "BMM_Parser.tab.h"
-int yylineno = 1;
 void yyerror(char* s);
 FILE* lexer;
 %}
@@ -33,25 +32,6 @@ REM[ ][ |*|A-Z]*   {fprintf(lexer, "Statement Type: REM\nComment: ");
                     for(int i = 4; i < strlen(yytext); i++)
                         fprintf(lexer, "%c", yytext[i]);
                     fprintf(lexer, "\n");}      // Statement Types
-LET                {fprintf(lexer, "Statement Type: LET\n"); return LET;}
-PRINT              {fprintf(lexer, "Statement Type: PRINT\n"); return PRINT;}
-IF                 {fprintf(lexer, "Statement Type: IF\n"); return IF;}
-THEN               {fprintf(lexer, "Statement Type: THEN\n"); return THEN;}
-FOR                {fprintf(lexer, "Statement Type: FOR\n"); return FOR;}
-TO                 {fprintf(lexer, "Statement Type: TO\n"); return TO;}
-STEP               {fprintf(lexer, "Statement Type: STEP\n"); return STEP;}
-NEXT               {fprintf(lexer, "Statement Type: NEXT\n"); return NEXT;}
-INPUT              {fprintf(lexer, "Statement Type: INPUT\n"); return INPUT;}
-RETURN             {fprintf(lexer, "Statement Type: RETURN\n"); return RETURN;}
-DIM                {fprintf(lexer, "Statement Type: DIM\n"); return DIM;}
-DEF                {fprintf(lexer, "Statement Type: DEF\n"); return DEF;}
-DATA               {fprintf(lexer, "Statement Type: DATA\n"); return DATA;}
-GOTO               {fprintf(lexer, "Statement Type: GOTO\n"); return GOTO;}
-GOSUB              {fprintf(lexer, "Statement Type: GOSUB\n"); return GOSUB;}
-END                {fprintf(lexer, "Statement Type: END\n"); return END;}
-RETURN             {fprintf(lexer, "Statement Type: RETURN\n"); return RETURN;}
-STOP               {fprintf(lexer, "Statement Type: STOP\n"); return STOP;}
-
 \(                 {fprintf(lexer, "Operator: Left Paranthesis '('\n"); return LPAREN;}
 \)                 {fprintf(lexer, "Operator: Right Paranthesis ')'\n"); return RPAREN;}
 "^"                {fprintf(lexer, "Operator: Exponentiation '^'\n"); return EXPONENT;}

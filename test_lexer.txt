@@ -1,2 +1,340 @@
+Line Number: 10
+Statement Type: REM
+Comment: SAMPLE PROGRAM WITH SUBROUTINES
+
+Line Number: 20
+Statement Type: REM
+Comment: 
+
+Line Number: 30
+Statement Type: REM
+Comment: A IS ARRAY TO HOLD THE DATA ITEMS
+
+Line Number: 40
+Statement Type: REM
+Comment: I IS THE LOOP INDEX VARIABLE
+
+Line Number: 50
+Statement Type: REM
+Comment: X HOLDS THE VALUE WE SEEK
+
+Line Number: 60
+Statement Type: REM
+Comment: F IS A FLAG, 0 MEANS NOT FOUND, 1 MEANS FOUND
+
+Line Number: 70
+Statement Type: REM
+Comment: N IS NUMBER OF ELEMENTS IN A
+
+Line Number: 80
+Statement Type: REM
+Comment: 
+
 Line Number: 100
+Statement Type: DIM
+Variable ID: A
+Operator: Left Paranthesis '('
+Numeric Literal: 19
+Operator: Right Paranthesis ')'
+
+Line Number: 110
+Statement Type: REM
+Comment: 
+
+Line Number: 120
+Statement Type: REM
+Comment: **************** MAIN *******************
+
+Line Number: 130
+Statement Type: REM
+Comment: 
+
+Line Number: 140
+Statement Type: REM
+Comment: READ DATA INTO ARRAY A
+
+Line Number: 150
+Statement Type: LET
+Variable ID: N
+Operator: Equal '='
+Numeric Literal: 20
+
+Line Number: 160
+Statement Type: GOSUB
+Numeric Literal: 380
+
+Line Number: 170
+Statement Type: REM
+Comment: GET VALUE FOR WHICH TO SEARCH
+
+Line Number: 180
 Statement Type: PRINT
+String Literal: "FIND WHAT"
+Operator: Semicolon ';'
+
+Line Number: 190
+Statement Type: INPUT
+Variable ID: X
+
+Line Number: 200
+Statement Type: REM
+Comment: DO SEQUENTIAL SEARCH
+
+Line Number: 210
+Statement Type: GOSUB
+Numeric Literal: 470
+
+Line Number: 220
+Statement Type: REM
+Comment: REPORT RESULTS
+
+Line Number: 230
+Statement Type: IF
+Variable ID: F
+Operator: Equal '='
+Numeric Literal: 1
+Statement Type: THEN
+Numeric Literal: 260
+
+Line Number: 240
+Statement Type: PRINT
+Variable ID: X
+Operator: Semicolon ';'
+String Literal: "NOT FOUND"
+
+Line Number: 250
+Statement Type: GOTO
+Numeric Literal: 270
+
+Line Number: 260
+Statement Type: PRINT
+Variable ID: X
+Operator: Semicolon ';'
+String Literal: "FOUND IN SLOT"
+Operator: Semicolon ';'
+Variable ID: I
+
+Line Number: 270
+Statement Type: REM
+Comment: TRY AGAIN?
+
+Line Number: 280
+Statement Type: PRINT
+String Literal: "TRY AGAIN"
+Operator: Semicolon ';'
+
+Line Number: 290
+Statement Type: INPUT
+Variable ID: A$
+
+Line Number: 300
+Statement Type: IF
+Variable ID: A$
+Operator: Equal '='
+String Literal: "Y"
+Statement Type: THEN
+Numeric Literal: 170
+
+Line Number: 310
+Statement Type: IF
+Variable ID: A$
+Operator: Equal '='
+String Literal: "N"
+Statement Type: THEN
+Numeric Literal: 340
+
+Line Number: 320
+Statement Type: PRINT
+String Literal: "ANSWER MUST BE Y OR N!"
+
+Line Number: 330
+Statement Type: GOTO
+Numeric Literal: 280
+
+Line Number: 340
+Statement Type: STOP
+
+Line Number: 350
+Statement Type: REM
+Comment: 
+
+Line Number: 360
+Statement Type: REM
+Comment: **************** SUBROUTINES *******************
+
+Line Number: 370
+Statement Type: REM
+Comment: 
+
+Line Number: 380
+Statement Type: REM
+Comment: SUBROUTINE TO LOAD DATA FROM DATA STATEMENTS INTO A
+
+Line Number: 390
+Statement Type: REM
+Comment: INPUT N NUMBER OF ELEMENTS
+
+Line Number: 400
+Statement Type: REM
+Comment: OUTPUT A(), ARRAY WITH N ELEMENTS
+
+Line Number: 410
+Statement Type: REM
+Comment: 
+
+Line Number: 420
+Statement Type: FOR
+Variable ID: I
+Operator: Equal '='
+Numeric Literal: 0
+Statement Type: TO
+Variable ID: N
+Operator: Minus '-'
+Numeric Literal: 1
+
+Line Number: 430
+Statement Type: INPUT
+Variable ID: A
+Operator: Left Paranthesis '('
+Variable ID: I
+Operator: Right Paranthesis ')'
+
+Line Number: 440
+Statement Type: NEXT
+Variable ID: I
+
+Line Number: 450
+Statement Type: RETURN
+
+Line Number: 460
+Statement Type: REM
+Comment: 
+
+Line Number: 470
+Statement Type: REM
+Comment: SUBROUTINE TO DO SEQUENTIAL SEARCH FOR X IN A
+
+Line Number: 480
+Statement Type: REM
+Comment: INPUT N NUMBER OF ELEMENTS
+
+Line Number: 490
+Statement Type: REM
+Comment: INPUT A(), ARRAY WITH N ELEMENTS
+
+Line Number: 500
+Statement Type: REM
+Comment: INPUT X, ELEMENT VALUE TO SEARCH FOR
+
+Line Number: 510
+Statement Type: REM
+Comment: OUTPUT F, 0 MEANS NOT FOUND, F=1 MEANS FOUND
+
+Line Number: 520
+Statement Type: REM
+Comment: OUTPUT I, INDEX OF X IN A() IF F=1, N OTHERWISE
+
+Line Number: 530
+Statement Type: REM
+Comment: 
+
+Line Number: 540
+Statement Type: LET
+Variable ID: F
+Operator: Equal '='
+Numeric Literal: 0
+
+Line Number: 550
+Statement Type: FOR
+Variable ID: I
+Operator: Equal '='
+Numeric Literal: 0
+Statement Type: TO
+Variable ID: N
+Operator: Minus '-'
+Numeric Literal: 1
+
+Line Number: 560
+Statement Type: IF
+Variable ID: A
+Operator: Left Paranthesis '('
+Variable ID: I
+Operator: Right Paranthesis ')'
+Operator: Inequality '<>'
+Variable ID: X
+Statement Type: THEN
+Numeric Literal: 590
+
+Line Number: 570
+Statement Type: LET
+Variable ID: F
+Operator: Equal '='
+Numeric Literal: 1
+
+Line Number: 580
+Statement Type: GOTO
+Numeric Literal: 600
+
+Line Number: 590
+Statement Type: NEXT
+Variable ID: I
+
+Line Number: 600
+Statement Type: RETURN
+
+Line Number: 610
+Statement Type: REM
+Comment: 
+
+Line Number: 620
+Statement Type: REM
+Comment: ******************* DATA ***********************
+
+Line Number: 630
+Statement Type: DATA
+Numeric Literal: 21
+Operator: Comma ','
+Numeric Literal: 85
+Operator: Comma ','
+Numeric Literal: 80
+Operator: Comma ','
+Numeric Literal: 14
+Operator: Comma ','
+Numeric Literal: 60
+Operator: Comma ','
+Numeric Literal: 76
+Operator: Comma ','
+Numeric Literal: 87
+Operator: Comma ','
+Numeric Literal: 49
+Operator: Comma ','
+Numeric Literal: 78
+Operator: Comma ','
+Numeric Literal: 81
+Operator: Comma ','
+Numeric Literal: 96
+Operator: Comma ','
+Numeric Literal: 25
+Operator: Comma ','
+Numeric Literal: 17
+Operator: Comma ','
+Numeric Literal: 22
+Operator: Comma ','
+Numeric Literal: 13
+Operator: Comma ','
+Numeric Literal: 91
+Operator: Comma ','
+Numeric Literal: 23
+Operator: Comma ','
+Numeric Literal: 62
+Operator: Comma ','
+Numeric Literal: 5
+Operator: Comma ','
+Numeric Literal: 57
+
+Line Number: 640
+Statement Type: REM
+Comment: ******************* END ************************
+
+Line Number: 650
+Statement Type: END

@@ -9,154 +9,90 @@ FILE* lexer, *yyin;
 FILE* parser;
 %}
 
-%token NUM STR COMMA
-%token FUNCNAME
-%token LINENUM COMMENT LET PRINT IF THEN FOR TO STEP NEXT VAR DATA INPUT DIM DEF GOTO GOSUB RETURN END STOP
-%left PLUS MINUS MULTIPLY DIVIDE EXPONENT LPAREN RPAREN EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL NOT AND OR XOR
+%union {char* string;}
+
+%token <string> NUM STR COMMA SEMICOLON
+%token <string> FUNCNAME
+%token <string> LINENUM COMMENT LET PRINT IF THEN FOR TO STEP NEXT VAR DATA INPUT DIM DEF GOTO GOSUB RETURN END STOP
+%left <string> PLUS MINUS MULTIPLY DIVIDE EXPONENT LPAREN RPAREN EQUAL NOTEQUAL LESS LESSEQUAL GREATER GREATEREQUAL NOT AND OR XOR
 
 %%
-PROGRAM : LINE PROGRAM
-        | LINE
-        ;
-LINE    : LINENUM STATEMENT { fprintf(parser, "Line Number: %s\n", $1); }
-        | LINENUM COMMENT { fprintf(parser, "Line Number: %s\nComment: %s\n", $1, $2); }
-        ;
-STATEMENT : LET VAR EQUAL EXPR { fprintf(parser, "Statement: LET %s = %s\n", $2, $4); }
-          | PRINT EXPR { fprintf(parser, "Statement: PRINT %s\n", $2); }
-          | IF BOOLEXPR THEN { fprintf(parser, "Statement: IF %s THEN\n", $2); }
-          | FOR { fprintf(parser, "Statement: FOR\n"); }
-          | STEP { fprintf(parser, "Statement: STEP\n"); }
-          | NEXT { fprintf(parser, "Statement: NEXT\n"); }
-          | VAR { fprintf(parser, "Statement: VAR %s\n", $1); }
-          | DATA { fprintf(parser, "Statement: DATA\n"); }
-          | INPUT { fprintf(parser, "Statement: INPUT\n"); }
-          | DIM DECLARATIONS { fprintf(parser, "Statement: DIM Declaration: %s(%s)\n", $1, $2);}
-          | DEF FUNCNAME '(' VAR ')' EQUAL EXPR { fprintf(parser, "Statement: DEF %s(%s) = %s\n", $2, $4, $7); }
-          | DEF FUNCNAME EQUAL EXPR { fprintf(parser, "Statement: DEF %s = %s\n", $2, $4); }
-          | GOTO { fprintf(parser, "Statement: GOTO\n"); }
-          | GOSUB { fprintf(parser, "Statement: GOSUB\n"); }
-          | IF BOOLEXPR THEN NUM { fprintf(parser, "Statement: IF %s THEN %s\n", $2, $4); }
-          | FOR VAR EQUAL EXPR TO EXPR STEP EXPR { fprintf(parser, "Statement: FOR %s = %s TO %s STEP %s\n", $2, $4, $6, $8); }
-          | NEXT VAR { fprintf(parser, "Statement: NEXT %s\n", $2); }
-          | DATASTATEMENT { fprintf(parser, "Statement: DATA %s\n", $1); }
-          | INPUTSTATEMENT { fprintf(parser, "Statement: INPUT %s\n", $1); }
-          | GOTO NUM { fprintf(parser, "Statement: GOTO %s\n", $2); }
-          | GOSUB NUM { fprintf(parser, "Statement: GOSUB %s\n", $2); }
-          | RETURN { fprintf(parser, "Statement: RETURN\n"); }
-          | END { fprintf(parser, "Statement: END\n"); }
-          | STOP { fprintf(parser, "Statement: STOP\n"); }
-          ;
-EXPR    : EXPR AROPERATOR EXPR {
-              switch ($2) {
-                  case PLUS:
-                      fprintf(parser, "Expression: %s + %s\n", $1, $3);
-                      break;
-                  case MINUS:
-                      fprintf(parser, "Expression: %s - %s\n", $1, $3);
-                      break;
-                  case MULTIPLY:
-                      fprintf(parser, "Expression: %s * %s\n", $1, $3);
-                      break;
-                  case DIVIDE:
-                      fprintf(parser, "Expression: %s / %s\n", $1, $3);
-                      break;
-                  case EXPONENT:
-                      fprintf(parser, "Expression: %s ^ %s\n", $1, $3);
-                      break;
-              }
-          }
-        | LPAREN EXPR RPAREN { fprintf(parser, "Expression: (%s)\n", $2); }
-        | BOOLEXPR { fprintf(parser, "Expression: %s\n", $1); }
-        | VAR { fprintf(parser, "Expression: VAR %s\n", $1); }
-        | STR { fprintf(parser, "Expression: STR %s\n", $1); }
-        | NUM { fprintf(parser, "Expression: NUM %s\n", $1); }
-        ;
-
-AROPERATOR      : PLUS { fprintf(parser, "AR Operator: +\n"); }
-                | MINUS { fprintf(parser, "AR Operator: -\n"); }
-                | MULTIPLY { fprintf(parser, "AR Operator: *\n"); }
-                | DIVIDE { fprintf(parser, "AR Operator: /\n"); }
-                | EXPONENT { fprintf(parser, "AR Operator: ^\n"); }
+PROGRAM     : LINENUM STATEMENT      
+            | LINENUM STATEMENT PROGRAM    
+            ;
+STATEMENT   : COMMENT                   
+            | LET VAR EQUAL EXPR
+            | PRINT PRINTSTATEMENT
+            | IF EXPR THEN NUM      
+            | FOR FORSTATEMENT
+            | NEXT VAR
+            | DATA DATASTATEMENT
+            | DEF FUNCSTATEMENT
+            | DIM DECLSTATEMENT
+            | INPUT INPUTSTATEMENT
+            | GOSUB NUM
+            | GOTO NUM
+            | RETURN
+            | STOP
+            | END
+            ;
+FORSTATEMENT    : VAR EQUAL EXPR TO EXPR
+                | VAR EQUAL EXPR TO EXPR STEP EXPR
+                ;
+DATASTATEMENT   : VAL
+                | VAL COMMA DATASTATEMENT
+                ;
+FUNCSTATEMENT   : FUNCNAME LPAREN VAR RPAREN EQUAL EXPR
+                | FUNCNAME EQUAL EXPR
+                ;
+DECLSTATEMENT   : VAR LPAREN NUM RPAREN
+                | VAR LPAREN NUM COMMA NUM RPAREN
+                | VAR LPAREN NUM RPAREN COMMA DECLSTATEMENT
+                | VAR LPAREN NUM COMMA NUM RPAREN COMMA DECLSTATEMENT
+                ;
+INPUTSTATEMENT  : VAR
+                | VAR LPAREN VAR1 RPAREN
+                | VAR LPAREN VAR1 COMMA VAR1 RPAREN
+                | VAR COMMA INPUTSTATEMENT
+                | VAR LPAREN VAR1 RPAREN COMMA INPUTSTATEMENT
+                | VAR LPAREN VAR1 COMMA VAR1 RPAREN COMMA INPUTSTATEMENT
+                ;
+PRINTSTATEMENT  : EXPR
+                | EXPR COMMA
+                | EXPR SEMICOLON
+                | EXPR COMMA PRINTSTATEMENT
+                | EXPR SEMICOLON PRINTSTATEMENT
+                ;
+EXPR        : EXPR PLUS EXPR
+            | EXPR MINUS EXPR
+            | EXPR MULTIPLY EXPR
+            | EXPR DIVIDE EXPR
+            | EXPR EXPONENT EXPR
+            | EXPR EQUAL EXPR
+            | EXPR NOTEQUAL EXPR
+            | EXPR LESS EXPR
+            | EXPR LESSEQUAL EXPR
+            | EXPR GREATER EXPR
+            | EXPR GREATEREQUAL EXPR
+            | LPAREN EXPR RPAREN
+            | MINUS EXPR %prec NOT
+            | NOT EXPR
+            | EXPR AND EXPR
+            | EXPR OR EXPR
+            | EXPR XOR EXPR
+            | VAR
+            | VAR LPAREN VAR1 RPAREN
+            | VAR LPAREN VAR1 COMMA VAR1 RPAREN
+            | VAL
+            | FUNCNAME LPAREN EXPR RPAREN
+            ;
+VAR1        : VAR
+            | NUM
+            ;
+VAL             : NUM
+                | STR
                 ;
 
-BOOLEXPR        : BOOLEXPR BOOLOPERATOR BOOLEXPR {
-                      switch ($2) {
-                          case EQUAL:
-                              fprintf(parser, "Boolean Expression: %s == %s\n", $1, $3);
-                              break;
-                          case NOTEQUAL:
-                              fprintf(parser, "Boolean Expression: %s != %s\n", $1, $3);
-                              break;
-                          case LESS:
-                              fprintf(parser, "Boolean Expression: %s < %s\n", $1, $3);
-                              break;
-                          case LESSEQUAL:
-                              fprintf(parser, "Boolean Expression: %s <= %s\n", $1, $3);
-                              break;
-                          case GREATER:
-                              fprintf(parser, "Boolean Expression: %s > %s\n", $1, $3);
-                              break;
-                          case GREATEREQUAL:
-                              fprintf(parser, "Boolean Expression: %s >= %s\n", $1, $3);
-                              break;
-                          case AND:
-                              fprintf(parser, "Boolean Expression: %s && %s\n", $1, $3);
-                              break;
-                          case OR:
-                              fprintf(parser, "Boolean Expression: %s || %s\n", $1, $3);
-                              break;
-                          case XOR:
-                              fprintf(parser, "Boolean Expression: %s XOR %s\n", $1, $3);
-                              break;
-                      }
-                  }
-                | LPAREN BOOLEXPR RPAREN { fprintf(parser, "Boolean Expression: (%s)\n", $2); }
-                | NOT BOOLEXPR { fprintf(parser, "Boolean Expression: NOT %s\n", $2); }
-                | VAR { fprintf(parser, "Boolean Expression: VAR %s\n", $1); }
-                | NUM { fprintf(parser, "Boolean Expression: NUM %s\n", $1); }
-                ;
-
-BOOLOPERATOR    : EQUAL { fprintf(parser, "Boolean Operator: ==\n"); }
-                | NOTEQUAL { fprintf(parser, "Boolean Operator: !=\n"); }
-                | LESS { fprintf(parser, "Boolean Operator: <\n"); }
-                | LESSEQUAL { fprintf(parser, "Boolean Operator: <=\n"); }
-                | GREATER { fprintf(parser, "Boolean Operator: >\n"); }
-                | GREATEREQUAL { fprintf(parser, "Boolean Operator: >=\n"); }
-                | AND { fprintf(parser, "Boolean Operator: &&\n"); }
-                | OR { fprintf(parser, "Boolean Operator: ||\n"); }
-                | XOR { fprintf(parser, "Boolean Operator: XOR\n"); }
-                ;
-DATASTATEMENT   : DATA EXPR {
-                      fprintf(parser, "Data Statement: DATA %s\n", $2);
-                  }
-                | DATASTATEMENT COMMA EXPR {
-                      fprintf(parser, "Data Statement: %s, %s\n", $1, $3);
-                  }
-                ;
-
-INPUTSTATEMENT : INPUT VAR {
-                     fprintf(parser, "Input Statement: INPUT %s\n", $2);
-                 }
-               | INPUTSTATEMENT COMMA VAR {
-                     fprintf(parser, "Input Statement: %s, %s\n", $1, $3);
-                 }
-               ;
-
-DECLARATIONS   : DECLARATION {
-                     fprintf(parser, "Declaration: %s\n", $1);
-                 }
-               | DECLARATION COMMA DECLARATIONS {
-                     fprintf(parser, "Declaration: %s, %s\n", $1, $3);
-                 }
-               ;
-
-DECLARATION    : VAR LPAREN NUM RPAREN {
-                     fprintf(parser, "Declaration: %s(%s)\n", $1, $3);
-                 }
-               | VAR LPAREN NUM COMMA NUM RPAREN {
-                     fprintf(parser, "Declaration: %s(%s, %s)\n", $1, $3, $5);
-                 }
-               ;
 %%
 
 int main(int argc, char *argv[]) {

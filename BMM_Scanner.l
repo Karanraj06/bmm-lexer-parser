@@ -8,11 +8,11 @@ FILE* lexer;
 %}
 
 %%
-^[1-9][0-9]*0      {fprintf(lexer, "Line Number: %s\n", yytext);}   // Line Number
+^[1-9][0-9]*0      {fprintf(lexer, "Line Number: %s\n", yytext); yylval.string = yytext; return LINENUM;}   // Line Number
 REM([ ].*)?             {fprintf(lexer, "Statement Type: REM\nComment: ");
                     for(int i = 4; i < strlen(yytext); i++)
                         fprintf(lexer, "%c", yytext[i]);
-                    fprintf(lexer, "\n");}
+                    fprintf(lexer, "\n"); yylval.string = yytext; return COMMENT;}
 LET                {fprintf(lexer, "Statement Type: LET\n"); return LET;}       // Statement Types
 PRINT              {fprintf(lexer, "Statement Type: PRINT\n"); return PRINT;}
 IF                 {fprintf(lexer, "Statement Type: IF\n"); return IF;}
@@ -34,6 +34,7 @@ STOP               {fprintf(lexer, "Statement Type: STOP\n"); return STOP;}
 \(                 {fprintf(lexer, "Operator: Left Paranthesis '('\n"); return LPAREN;} // Operators
 \)                 {fprintf(lexer, "Operator: Right Paranthesis ')'\n"); return RPAREN;}
 ","                {fprintf(lexer, "Operator: Comma ','\n"); return COMMA;}
+";"                {fprintf(lexer, "Operator: Semicolon ';'\n"); return SEMICOLON;}
 "^"                {fprintf(lexer, "Operator: Exponentiation '^'\n"); return EXPONENT;}
 "-"                {fprintf(lexer, "Operator: Minus '-'\n"); return MINUS;}
 "+"                {fprintf(lexer, "Operator: Plus '+'\n"); return PLUS;}
@@ -55,8 +56,9 @@ XOR                {fprintf(lexer, "Operator: XOR\n"); return XOR;}
 [A-Z][0-9]?[#]      {fprintf(lexer, "Variable ID: %s\n", yytext); return VAR;} // Double-Precision
 [A-Z][0-9]?[$]      {fprintf(lexer, "Variable ID: %s\n", yytext); return VAR;} // String
 
-\".*\"                         {fprintf(lexer, "String Literal: %s\n", yytext); return STR;} // String Literal      // Values
-(([1-9][0-9]+)|([0-9]))([.][0-9]+)?           {fprintf(lexer, "Numeric Literal: %s\n", yytext); return NUM;} // Numeric Literal
+\".*\"                                        {fprintf(lexer, "String Literal: %s\n", yytext); yylval.string = yytext; return STR;} // String Literal      // Values
+(([1-9][0-9]+)|([0-9]))([.][0-9]+)?           {fprintf(lexer, "Numeric Literal: %s\n", yytext); yylval.string = yytext; return NUM;} // Numeric Literal
+FN[A-Z]                                       {fprintf(lexer, "Function Name: %s\n", yytext); return FUNCNAME;} // Function
 
 [ \t]                          /* Ignoring Newline, Tab and Whitespace*/
 \n                                {fprintf(lexer, "\n"); yylineno++;}

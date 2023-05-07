@@ -1,0 +1,16 @@
+10 LET x = 5
+20 PRINT "The value of x is: ", x
+30 IF x > 10 THEN
+40     PRINT "x is greater than 10"
+50 ENDIF
+60 FOR i = 1 TO 5 STEP
+70     PRINT i
+80 NEXT i
+90 DATA 1, 2, 3, 4, 5
+100 INPUT "Enter a number: ", num
+110 DIM arr(10)
+120 DEF add(x, y) = x + y
+130 GOTO 100
+140 GOSUB 200
+150 RETURN
+160 END

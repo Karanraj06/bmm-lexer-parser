@@ -1,14 +1,12 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-extern char* yytext;
-extern FILE* yyin;
-extern FILE* yyout;
+FILE* yyin;
+FILE* yyout;
 
 extern int yylex();
-extern int yyparse();
+int yyparse();
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {

@@ -30,6 +30,9 @@ GOTO               { fprintf(yyout, "Statement Type: GOTO\n"); return GOTO; }
 GOSUB              { fprintf(yyout, "Statement Type: GOSUB\n"); return GOSUB; }
 END                { fprintf(yyout, "Statement Type: END\n"); return END; }
 STOP               { fprintf(yyout, "Statement Type: STOP\n"); return STOP; }
+\".*\"               { fprintf(yyout, "String Literal: %s\n", yytext); yylval.string = strdup(yytext); return STR; }
+(([1-9][0-9]+)|([0-9]))([.][0-9]+)? { fprintf(yyout, "Numeric Literal: %s\n", yytext); yylval.string = strdup(yytext); return NUM; }
+FN[A-Z]            { fprintf(yyout, "Function Name: %s\n", yytext); return FUNCNAME; }
 \(                 { fprintf(yyout, "Operator: Left Parenthesis '('\n"); return LPAREN; }
 \)                 { fprintf(yyout, "Operator: Right Parenthesis ')'\n"); return RPAREN; }
 ","                { fprintf(yyout, "Operator: Comma ','\n"); return COMMA; }
@@ -53,12 +56,9 @@ XOR                { fprintf(yyout, "Operator: XOR\n"); return XOR; }
 [A-Z][0-9]?[!]     { fprintf(yyout, "Variable ID: %s\n", yytext); return VAR; }
 [A-Z][0-9]?[#]     { fprintf(yyout, "Variable ID: %s\n", yytext); return VAR; }
 [A-Z][0-9]?[$]     { fprintf(yyout, "Variable ID: %s\n", yytext); return VAR; }
-\".*\"               { fprintf(yyout, "String Literal: %s\n", yytext); yylval.string = strdup(yytext); return STR; }
-(([1-9][0-9]+)|([0-9]))([.][0-9]+)? { fprintf(yyout, "Numeric Literal: %s\n", yytext); yylval.string = strdup(yytext); return NUM; }
-FN[A-Z]            { fprintf(yyout, "Function Name: %s\n", yytext); return FUNCNAME; }
-[ \t]              { /* Ignoring Newline, Tab and Whitespace*/ }
+[ \t]              { /* Ignoring Newline, Tab and Whitespace */ }
 \n                 { fprintf(yyout, "\n"); yylineno++; }
-.                  { fprintf(stderr, "Invalid character: %s\nLine number: %d\n", yytext, yylineno); return yytext[0]; }
+.                  { /* Ignoring Invalid Character */ }
 %%
 
 int yywrap() {
